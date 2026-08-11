@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6004c4644414e8d9557ece7283240b5, type: 3}
+  m_Name: Car1Data
+  m_EditorClassIdentifier: Assembly-CSharp::CarData
+  displayName: Red Racer
+  carPrefab: {fileID: 4392548335686410595, guid: 83d0b5df2d33ffb47a49bf49c5af16f0, type: 3}
+  previewOffset: {x: 0, y: 0.5, z: 0}
+  previewRotationSpeed: 30

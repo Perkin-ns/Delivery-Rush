@@ -11,6 +11,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SelectCar.unity
     guid: 53d2eb6310229934fa7c095c95d5b39d
+  - enabled: 1
+    path: Assets/Scenes/Game.unity
+    guid: 26d2d23418e0dab469bcfc01e0cd07f3
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: 56d861c2f5e73284eb4820550fb46dd7
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
