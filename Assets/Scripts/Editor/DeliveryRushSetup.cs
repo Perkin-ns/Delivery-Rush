@@ -461,8 +461,6 @@ public class DeliveryRushSetup : EditorWindow
         pickupSO.FindProperty("pickupName").stringValue = pickupDisplayName;
         pickupSO.ApplyModifiedProperties();
 
-        delivery.PairedPickup = pickup;
-
         delivery.SetVisualActive(false);
         pickup.SetVisualActive(true);
 
@@ -540,15 +538,7 @@ public class DeliveryRushSetup : EditorWindow
     {
         GameObject gmGO = new GameObject("GameManager");
         gmGO.transform.SetParent(root.transform);
-        GameManager gm = gmGO.AddComponent<GameManager>();
-
-        CameraController camCtrl = root.GetComponentInChildren<CameraController>();
-        if (camCtrl != null)
-        {
-            SerializedObject so = new SerializedObject(gm);
-            so.FindProperty("cameraController").objectReferenceValue = camCtrl;
-            so.ApplyModifiedProperties();
-        }
+        gmGO.AddComponent<GameManager>();
     }
 
     private static void CreateSpeedBoosts(GameObject root)

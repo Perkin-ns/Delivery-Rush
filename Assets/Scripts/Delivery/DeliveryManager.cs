@@ -26,8 +26,6 @@ public class DeliveryManager : MonoBehaviour
     private float deliveryStartTime;
     private DeliveryPoint currentTarget;
 
-    public System.Action<int> OnScoreChanged;
-    public System.Action<bool> OnDeliveryStateChanged;
     public System.Action<string> OnInstructionChanged;
     public System.Action OnGameOver;
 
@@ -78,7 +76,6 @@ public class DeliveryManager : MonoBehaviour
         HasActiveDelivery = true;
         currentTarget = target;
         deliveryStartTime = Time.time;
-        OnDeliveryStateChanged?.Invoke(true);
         OnInstructionChanged?.Invoke("Deliver to: " + target.displayName);
     }
 
@@ -96,9 +93,6 @@ public class DeliveryManager : MonoBehaviour
         HasActiveDelivery = false;
         currentTarget = null;
 
-        OnScoreChanged?.Invoke(Score);
-        OnDeliveryStateChanged?.Invoke(false);
-
         if (pickupPoints != null && pickupPoints.Length > 0)
         {
             currentPickupIndex = (currentPickupIndex + 1) % pickupPoints.Length;
@@ -111,15 +105,5 @@ public class DeliveryManager : MonoBehaviour
         }
 
         return true;
-    }
-
-    public void CancelDelivery()
-    {
-        if (!HasActiveDelivery) return;
-
-        HasActiveDelivery = false;
-        currentTarget = null;
-        OnDeliveryStateChanged?.Invoke(false);
-        OnInstructionChanged?.Invoke("Pick up a package!");
     }
 }

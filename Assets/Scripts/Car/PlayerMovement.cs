@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private float turnSpeed = 100f;
     [SerializeField] private float driftFactor = 0.95f;
     [SerializeField] private float acceleration = 5f;
@@ -22,7 +21,6 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isBoosted;
     private float boostTimer;
-    private float boostMultiplier = 1.5f;
     private float originalMaxSpeed;
 
     public bool IsBoosted => isBoosted;
@@ -118,7 +116,6 @@ public class PlayerMovement : MonoBehaviour
 
         isBoosted = true;
         boostTimer = duration;
-        boostMultiplier = multiplier;
         maxSpeed = originalMaxSpeed * multiplier;
     }
 }

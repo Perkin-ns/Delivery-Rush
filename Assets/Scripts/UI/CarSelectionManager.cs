@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using TMPro;
 
@@ -12,12 +11,6 @@ public class CarSelectionManager : MonoBehaviour
 
     private int currentIndex;
     private GameObject currentPreview;
-    private PlayerInput playerInput;
-
-    private void Awake()
-    {
-        playerInput = GetComponent<PlayerInput>();
-    }
 
     private void Start()
     {
@@ -40,7 +33,6 @@ public class CarSelectionManager : MonoBehaviour
     {
         currentIndex = (currentIndex + 1) % cars.Length;
         ShowCar(currentIndex);
-        Debug.Log("Button Pressed");
     }
 
     public void OnPrevious()
@@ -55,7 +47,6 @@ public class CarSelectionManager : MonoBehaviour
         PlayerPrefs.SetInt("SelectedCar", currentIndex);
         PlayerPrefs.Save();
         SceneManager.LoadScene(gameSceneName);
-        Debug.Log("Button Pressed");
     }
 
     private void ShowCar(int index)

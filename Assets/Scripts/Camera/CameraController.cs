@@ -12,12 +12,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float positionSmoothTime = 0.3f;
     [SerializeField] private float rotationSmoothTime = 0.2f;
 
-    [Header("Transition")]
-    [SerializeField] private float viewTransitionSpeed = 3f;
-
     private bool isTopDown;
     private Vector3 velocityRef;
-    private float rotationVelocityRef;
 
     private void Start()
     {

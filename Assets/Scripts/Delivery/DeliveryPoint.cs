@@ -12,8 +12,6 @@ public class DeliveryPoint : MonoBehaviour
     private Collider triggerCollider;
     private bool isActive;
 
-    public PickupPoint PairedPickup { get; set; }
-
     private void Awake()
     {
         meshRenderer = GetComponent<MeshRenderer>();

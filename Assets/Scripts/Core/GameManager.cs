@@ -3,7 +3,6 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private CameraController cameraController;
     [SerializeField] private string gameOverScene = "GameOver";
 
     private void Start()

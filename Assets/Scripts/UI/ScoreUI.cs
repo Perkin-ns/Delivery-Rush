@@ -6,11 +6,8 @@ public class ScoreUI : MonoBehaviour
     private TMP_Text scoreText;
     private TMP_Text timerText;
     private TMP_Text instructionText;
-    private GameObject gameOverPanel;
-    private TMP_Text finalScoreText;
     private TMP_Text boostText;
 
-    private bool wasGameOver;
     private PlayerMovement playerRef;
 
     private void Awake()
@@ -36,26 +33,12 @@ public class ScoreUI : MonoBehaviour
         boostText = CreateText("BoostText", new Vector2(0f, 0f), 22, font);
         boostText.color = Color.yellow;
         boostText.gameObject.SetActive(false);
-
-        gameOverPanel = new GameObject("GameOverPanel");
-        gameOverPanel.transform.SetParent(transform, false);
-        RectTransform panelRect = gameOverPanel.AddComponent<RectTransform>();
-        panelRect.anchorMin = new Vector2(0.5f, 0.5f);
-        panelRect.anchorMax = new Vector2(0.5f, 0.5f);
-        panelRect.sizeDelta = new Vector2(400f, 200f);
-        panelRect.anchoredPosition = Vector2.zero;
-        UnityEngine.UI.Image panelImg = gameOverPanel.AddComponent<UnityEngine.UI.Image>();
-        panelImg.color = new Color(0f, 0f, 0f, 0.7f);
-
-        finalScoreText = CreateText("FinalScoreText", Vector2.zero, 32, font, gameOverPanel);
-
-        gameOverPanel.SetActive(false);
     }
 
-    private TMP_Text CreateText(string name, Vector2 position, int fontSize, TMP_FontAsset font, GameObject customParent = null)
+    private TMP_Text CreateText(string name, Vector2 position, int fontSize, TMP_FontAsset font)
     {
         GameObject go = new GameObject(name);
-        go.transform.SetParent(customParent != null ? customParent.transform : transform, false);
+        go.transform.SetParent(transform, false);
 
         RectTransform rect = go.AddComponent<RectTransform>();
         rect.anchoredPosition = position;
@@ -101,13 +84,6 @@ public class ScoreUI : MonoBehaviour
             {
                 boostText.gameObject.SetActive(false);
             }
-        }
-
-        if (dm.IsGameOver && !wasGameOver)
-        {
-            wasGameOver = true;
-            gameOverPanel.SetActive(true);
-            finalScoreText.text = $"Final Score: {dm.Score}";
         }
     }
 }
