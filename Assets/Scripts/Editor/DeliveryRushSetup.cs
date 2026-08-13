@@ -40,6 +40,7 @@ public class DeliveryRushSetup : EditorWindow
         body.transform.localScale = new Vector3(1.8f, 0.5f, 3.8f);
         body.transform.localRotation = Quaternion.identity;
         body.GetComponent<MeshRenderer>().material = material;
+        DestroyImmediate(body.GetComponent<Collider>());
 
         GameObject cabin = GameObject.CreatePrimitive(PrimitiveType.Cube);
         cabin.name = "Cabin";
@@ -48,6 +49,7 @@ public class DeliveryRushSetup : EditorWindow
         cabin.transform.localScale = new Vector3(0.9f, 0.6f, 0.7f);
         cabin.transform.localRotation = Quaternion.Euler(15f, 0f, 0f);
         cabin.GetComponent<MeshRenderer>().material = material;
+        DestroyImmediate(cabin.GetComponent<Collider>());
 
         CreateWheel(root, "Wheel_FL", new Vector3(-0.9f, -0.1f, 1.1f), material);
         CreateWheel(root, "Wheel_FR", new Vector3(0.9f, -0.1f, 1.1f), material);
@@ -59,12 +61,15 @@ public class DeliveryRushSetup : EditorWindow
         rb.linearDamping = 0.5f;
         rb.angularDamping = 2f;
         rb.useGravity = true;
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        rb.centerOfMass = new Vector3(0f, -0.3f, 0f);
 
         BoxCollider collider = root.AddComponent<BoxCollider>();
         collider.center = new Vector3(0f, 0.4f, 0f);
         collider.size = new Vector3(1.9f, 0.8f, 4f);
 
         root.AddComponent<PlayerMovement>();
+        root.AddComponent<WaypointArrow>();
 
         string fullPath = path + name + ".prefab";
         bool success;
@@ -85,12 +90,51 @@ public class DeliveryRushSetup : EditorWindow
         wheel.transform.localPosition = position;
         wheel.transform.localScale = new Vector3(0.45f, 0.15f, 0.45f);
         wheel.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+        DestroyImmediate(wheel.GetComponent<Collider>());
 
         MeshRenderer renderer = wheel.GetComponent<MeshRenderer>();
         Material wheelMat = new Material(material);
         Color col = material.color;
         wheelMat.color = new Color(col.r * 0.3f, col.g * 0.3f, col.b * 0.3f, 1f);
         renderer.material = wheelMat;
+    }
+
+    [MenuItem("Tools/Delivery Rush/Setup Speed Boost Prefab")]
+    public static void BuildSpeedBoostPrefab()
+    {
+        Material boostMat = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/PowerUps/SpeedBoost.mat");
+        if (boostMat == null)
+        {
+            Debug.LogError("SpeedBoost material not found. Ensure SpeedBoost.mat exists in Assets/Materials/PowerUps/");
+            return;
+        }
+
+        if (!AssetDatabase.IsValidFolder("Assets/Prefabs/PowerUps"))
+        {
+            if (!AssetDatabase.IsValidFolder("Assets/Prefabs"))
+                AssetDatabase.CreateFolder("Assets", "Prefabs");
+            AssetDatabase.CreateFolder("Assets/Prefabs", "PowerUps");
+        }
+
+        GameObject boost = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        boost.name = "SpeedBoost";
+        boost.transform.localScale = Vector3.one;
+        boost.GetComponent<MeshRenderer>().material = boostMat;
+
+        Collider col = boost.GetComponent<Collider>();
+        col.isTrigger = true;
+
+        boost.AddComponent<SpeedBoost>();
+
+        string fullPath = "Assets/Prefabs/PowerUps/SpeedBoost.prefab";
+        bool success;
+        PrefabUtility.SaveAsPrefabAsset(boost, fullPath, out success);
+        if (success)
+            Debug.Log("Created prefab: " + fullPath);
+        else
+            Debug.LogError("Failed to create prefab: " + fullPath);
+
+        Object.DestroyImmediate(boost);
     }
 
     [MenuItem("Tools/Delivery Rush/Create Car Data Assets")]
@@ -131,32 +175,14 @@ public class DeliveryRushSetup : EditorWindow
     [MenuItem("Tools/Delivery Rush/Setup All")]
     public static void SetupAll()
     {
-        EnsurePlayerTag();
         BuildCarPrefabs();
+        BuildSpeedBoostPrefab();
         CreateCarDataAssets();
         SetupSelectCarScene();
         SetupGameScene();
         SetupGameOverScene();
         AddScenesToBuildSettings();
         Debug.Log("Delivery Rush setup complete!");
-    }
-
-    private static void EnsurePlayerTag()
-    {
-        SerializedObject tagManager = new SerializedObject(
-            AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
-        SerializedProperty tagsProp = tagManager.FindProperty("tags");
-
-        for (int i = 0; i < tagsProp.arraySize; i++)
-        {
-            if (tagsProp.GetArrayElementAtIndex(i).stringValue == "Player")
-                return;
-        }
-
-        tagsProp.InsertArrayElementAtIndex(tagsProp.arraySize);
-        tagsProp.GetArrayElementAtIndex(tagsProp.arraySize - 1).stringValue = "Player";
-        tagManager.ApplyModifiedProperties();
-        Debug.Log("Added 'Player' tag to Tag Manager.");
     }
 
     [MenuItem("Tools/Delivery Rush/Add Scenes to Build Settings")]
@@ -322,7 +348,6 @@ public class DeliveryRushSetup : EditorWindow
         CreateObstacles(sceneRoot);
         CreateSpeedBoosts(sceneRoot);
         PickupPoint[] pickups = CreatePickupDeliveryPairs(sceneRoot);
-        CreateNPC(sceneRoot, pickups);
         CreateSpawnPoint(sceneRoot);
         CreateHUDCanvas(sceneRoot);
         CreateGameManager(sceneRoot);
@@ -483,26 +508,6 @@ public class DeliveryRushSetup : EditorWindow
         return marker;
     }
 
-    private static void CreateNPC(GameObject root, PickupPoint[] pickups)
-    {
-        GameObject npcParent = new GameObject("NPCs");
-        npcParent.transform.SetParent(root.transform);
-
-        if (pickups.Length > 1)
-        {
-            GameObject npc = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            npc.name = "NPC_Receiver";
-            npc.transform.SetParent(npcParent.transform);
-            npc.transform.position = new Vector3(12f, 0.5f, -3f);
-            npc.transform.localScale = new Vector3(0.5f, 1f, 0.5f);
-            npc.GetComponent<MeshRenderer>().material.color = new Color(1f, 0.85f, 0.4f, 1f);
-            npc.AddComponent<NPCReceiver>();
-
-            Collider col = npc.GetComponent<Collider>();
-            Object.DestroyImmediate(col);
-        }
-    }
-
     private static void CreateSpawnPoint(GameObject root)
     {
         GameObject spawnPoint = new GameObject("SpawnPoint");
@@ -527,6 +532,7 @@ public class DeliveryRushSetup : EditorWindow
         GameObject canvasGO = new GameObject("HUDCanvas");
         canvasGO.transform.SetParent(root.transform);
         canvasGO.AddComponent<ScoreUI>();
+        canvasGO.AddComponent<Minimap>();
 
         GameObject eventSystemGO = new GameObject("EventSystem");
         eventSystemGO.transform.SetParent(root.transform);
@@ -553,17 +559,16 @@ public class DeliveryRushSetup : EditorWindow
 
     private static void CreateSpeedBoost(GameObject parent, Vector3 position)
     {
-        GameObject boost = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        boost.name = "SpeedBoost";
-        boost.transform.SetParent(parent.transform);
-        boost.transform.position = position;
-        boost.transform.localScale = new Vector3(1f, 1f, 1f);
-        boost.GetComponent<MeshRenderer>().material.color = Color.yellow;
+        GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/PowerUps/SpeedBoost.prefab");
+        if (prefab == null)
+        {
+            Debug.LogError("SpeedBoost prefab not found. Run 'Setup Speed Boost Prefab' first.");
+            return;
+        }
 
-        Collider col = boost.GetComponent<Collider>();
-        col.isTrigger = true;
-
-        boost.AddComponent<SpeedBoost>();
+        GameObject boost = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+        boost.transform.SetParent(parent.transform, false);
+        boost.transform.localPosition = position;
     }
 
     private static void WirePickupsToDeliveryManager(GameObject root, PickupPoint[] pickups)

@@ -4,8 +4,10 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
+    public static PlayerMovement Instance { get; private set; }
+
     [Header("Movement Settings")]
-    [SerializeField] private float turnSpeed = 100f;
+    [SerializeField] private float turnSpeed = 30f;
     [SerializeField] private float driftFactor = 0.95f;
     [SerializeField] private float acceleration = 5f;
     [SerializeField] private float maxSpeed = 30f;
@@ -28,8 +30,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         rb = GetComponent<Rigidbody>();
         originalMaxSpeed = maxSpeed;
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
     }
 
     private void Update()
@@ -104,9 +112,15 @@ public class PlayerMovement : MonoBehaviour
             rb.AddTorque(transform.up * turnInput * turnSpeed * Mathf.Sign(moveInput), ForceMode.Acceleration);
         }
 
-        Vector3 forwardVelocity = Vector3.Dot(rb.linearVelocity, transform.forward) * transform.forward;
-        Vector3 sidewaysVelocity = Vector3.Dot(rb.linearVelocity, transform.right) * transform.right;
-        rb.linearVelocity = forwardVelocity + sidewaysVelocity * driftFactor;
+        Vector3 horizontalVelocity = rb.linearVelocity;
+        horizontalVelocity.y = 0f;
+
+        float horizontalForwardSpeed = Vector3.Dot(horizontalVelocity, transform.forward);
+        float sidewaysSpeed = Vector3.Dot(horizontalVelocity, transform.right);
+
+        rb.linearVelocity = transform.forward * horizontalForwardSpeed
+                          + transform.right * sidewaysSpeed * driftFactor
+                          + Vector3.up * rb.linearVelocity.y;
     }
 
     public void ActivateBoost(float multiplier, float duration)

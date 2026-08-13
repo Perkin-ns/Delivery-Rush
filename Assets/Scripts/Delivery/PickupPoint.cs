@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PickupPoint : MonoBehaviour
 {
+    public static readonly System.Collections.Generic.List<PickupPoint> All = new();
+
     [SerializeField] private DeliveryPoint pairedDeliveryPoint;
     [SerializeField] private string pickupName = "Package";
 
@@ -19,6 +21,12 @@ public class PickupPoint : MonoBehaviour
     {
         meshRenderer = GetComponent<MeshRenderer>();
         triggerCollider = GetComponent<Collider>();
+        All.Add(this);
+    }
+
+    private void OnDestroy()
+    {
+        All.Remove(this);
     }
 
     private void OnTriggerEnter(Collider other)

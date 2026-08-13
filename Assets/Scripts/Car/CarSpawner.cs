@@ -18,6 +18,5 @@ public class CarSpawner : MonoBehaviour
 
         GameObject spawnedCar = Instantiate(data.carPrefab, transform.position, transform.rotation);
         spawnedCar.name = data.displayName;
-        spawnedCar.tag = "Player";
     }
 }

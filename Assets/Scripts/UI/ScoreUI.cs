@@ -8,8 +8,6 @@ public class ScoreUI : MonoBehaviour
     private TMP_Text instructionText;
     private TMP_Text boostText;
 
-    private PlayerMovement playerRef;
-
     private void Awake()
     {
         if (DeliveryManager.Instance == null)
@@ -70,15 +68,14 @@ public class ScoreUI : MonoBehaviour
         else
             instructionText.text = $"Pick up: {dm.CurrentPickupName}";
 
-        if (playerRef == null)
-            playerRef = FindFirstObjectByType<PlayerMovement>();
+        PlayerMovement player = PlayerMovement.Instance;
 
-        if (playerRef != null && boostText != null)
+        if (player != null && boostText != null)
         {
-            if (playerRef.IsBoosted)
+            if (player.IsBoosted)
             {
                 boostText.gameObject.SetActive(true);
-                boostText.text = $"SPEED BOOST: {playerRef.BoostTimeRemaining:F1}s";
+                boostText.text = $"SPEED BOOST: {player.BoostTimeRemaining:F1}s";
             }
             else
             {

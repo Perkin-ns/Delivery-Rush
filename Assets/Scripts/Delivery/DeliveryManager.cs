@@ -43,7 +43,7 @@ public class DeliveryManager : MonoBehaviour
     private void Start()
     {
         if (pickupPoints == null || pickupPoints.Length == 0)
-            pickupPoints = FindObjectsOfType<PickupPoint>();
+            pickupPoints = PickupPoint.All.ToArray();
 
         if (pickupPoints != null && pickupPoints.Length > 0)
         {
@@ -67,6 +67,23 @@ public class DeliveryManager : MonoBehaviour
             IsGameOver = true;
             OnGameOver?.Invoke();
         }
+    }
+
+    public bool TryGetCurrentTarget(out Vector3 position)
+    {
+        position = Vector3.zero;
+        if (HasActiveDelivery && currentTarget != null)
+        {
+            position = currentTarget.transform.position;
+            return true;
+        }
+        if (pickupPoints != null && currentPickupIndex >= 0 && currentPickupIndex < pickupPoints.Length
+            && pickupPoints[currentPickupIndex] != null)
+        {
+            position = pickupPoints[currentPickupIndex].transform.position;
+            return true;
+        }
+        return false;
     }
 
     public void StartDelivery(DeliveryPoint target, string pickupName)

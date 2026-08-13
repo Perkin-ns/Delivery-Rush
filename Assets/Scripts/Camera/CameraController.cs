@@ -15,16 +15,6 @@ public class CameraController : MonoBehaviour
     private bool isTopDown;
     private Vector3 velocityRef;
 
-    private void Start()
-    {
-        if (target == null)
-        {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
-                target = player.transform;
-        }
-    }
-
     private void Update()
     {
         if (Keyboard.current != null && Keyboard.current.cKey.wasPressedThisFrame)
@@ -35,6 +25,8 @@ public class CameraController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (target == null && PlayerMovement.Instance != null)
+            target = PlayerMovement.Instance.transform;
         if (target == null) return;
         FollowTarget();
     }

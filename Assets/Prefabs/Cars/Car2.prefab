@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7609843712587054839}
   - component: {fileID: 3397486801808460570}
-  - component: {fileID: 7761285011028217375}
   - component: {fileID: 3403705099126389479}
   m_Layer: 0
   m_Name: Body
@@ -43,27 +42,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 460409991624919578}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &7761285011028217375
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 460409991624919578}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &3403705099126389479
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -123,7 +101,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1241911257555210929}
   - component: {fileID: 6639787680956353352}
-  - component: {fileID: 836132550442334023}
   - component: {fileID: 1193287613870313681}
   m_Layer: 0
   m_Name: Wheel_RL
@@ -155,29 +132,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4804602284296090305}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!136 &836132550442334023
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4804602284296090305}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1193287613870313681
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -237,7 +191,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7936516610708820761}
   - component: {fileID: 5424094593995096743}
-  - component: {fileID: 4649107711421100102}
   - component: {fileID: 2665566576238408815}
   m_Layer: 0
   m_Name: Wheel_FR
@@ -269,29 +222,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5209146481591636413}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!136 &4649107711421100102
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5209146481591636413}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &2665566576238408815
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -351,7 +281,6 @@ GameObject:
   m_Component:
   - component: {fileID: 319073957481798778}
   - component: {fileID: 3741240342022433301}
-  - component: {fileID: 954340566412314209}
   - component: {fileID: 4050560648730752354}
   m_Layer: 0
   m_Name: Cabin
@@ -383,27 +312,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5661918719526552744}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &954340566412314209
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5661918719526552744}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &4050560648730752354
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -465,6 +373,7 @@ GameObject:
   - component: {fileID: 7862836131187925660}
   - component: {fileID: 8047902522341065238}
   - component: {fileID: 5269817633678125133}
+  - component: {fileID: 7211280874822005353}
   m_Layer: 0
   m_Name: Car2
   m_TagString: Untagged
@@ -503,7 +412,7 @@ Rigidbody:
   m_Mass: 1000
   m_LinearDamping: 0.5
   m_AngularDamping: 2
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_CenterOfMass: {x: 0, y: -0.3, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
@@ -512,12 +421,12 @@ Rigidbody:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 1
+  m_ImplicitCom: 0
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!65 &8047902522341065238
 BoxCollider:
@@ -552,13 +461,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 636b0bca30aa0254ebed8c354f561126, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  moveSpeed: 10
-  turnSpeed: 50
+  turnSpeed: 30
   driftFactor: 0.95
   acceleration: 5
   maxSpeed: 30
   brakeForce: 15
   brakeThreshold: 2
+--- !u!114 &7211280874822005353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7266827818234928535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bff7b6f7e9e4ae29171bcbb6d52a991, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaypointArrow
+  hoverHeight: 2.2
+  pickupColor: {r: 0, g: 1, b: 0, a: 1}
+  deliveryColor: {r: 0, g: 0, b: 1, a: 1}
 --- !u!1 &7784664162257917830
 GameObject:
   m_ObjectHideFlags: 0
@@ -569,7 +492,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7834713960283299848}
   - component: {fileID: 2174481049525423706}
-  - component: {fileID: 6970314087664275716}
   - component: {fileID: 8363084731300634437}
   m_Layer: 0
   m_Name: Wheel_RR
@@ -601,29 +523,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7784664162257917830}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!136 &6970314087664275716
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7784664162257917830}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &8363084731300634437
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -683,7 +582,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2357687450156658670}
   - component: {fileID: 3994954853585157101}
-  - component: {fileID: 932983611859440969}
   - component: {fileID: 7968638018164433186}
   m_Layer: 0
   m_Name: Wheel_FL
@@ -715,29 +613,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9113184707446455253}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!136 &932983611859440969
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9113184707446455253}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &7968638018164433186
 MeshRenderer:
   m_ObjectHideFlags: 0
