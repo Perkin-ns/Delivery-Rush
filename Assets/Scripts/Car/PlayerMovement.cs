@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] private float turnSpeed = 30f;
     [SerializeField] private float driftFactor = 0.95f;
-    [SerializeField] private float acceleration = 5f;
+    [SerializeField] private float acceleration = 2f;
     [SerializeField] private float maxSpeed = 30f;
 
     [Header("Brake Settings")]

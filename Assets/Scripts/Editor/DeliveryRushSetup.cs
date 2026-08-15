@@ -137,6 +137,43 @@ public class DeliveryRushSetup : EditorWindow
         Object.DestroyImmediate(boost);
     }
 
+    [MenuItem("Tools/Delivery Rush/Setup Portal Prefab")]
+    public static void BuildPortalPrefab()
+    {
+        if (!AssetDatabase.IsValidFolder("Assets/Prefabs/Portals"))
+        {
+            if (!AssetDatabase.IsValidFolder("Assets/Prefabs"))
+                AssetDatabase.CreateFolder("Assets", "Prefabs");
+            AssetDatabase.CreateFolder("Assets/Prefabs", "Portals");
+        }
+
+        GameObject portal = new GameObject("Portal");
+
+        GameObject disc = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        disc.name = "Disc";
+        disc.transform.SetParent(portal.transform, false);
+        disc.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        disc.transform.localScale = new Vector3(1.6f, 0.1f, 1.6f);
+        DestroyImmediate(disc.GetComponent<Collider>());
+
+        BoxCollider trigger = portal.AddComponent<BoxCollider>();
+        trigger.isTrigger = true;
+        trigger.center = Vector3.zero;
+        trigger.size = new Vector3(1.8f, 2f, 1.2f);
+
+        portal.AddComponent<Portal>();
+
+        string fullPath = "Assets/Prefabs/Portals/Portal.prefab";
+        bool success;
+        PrefabUtility.SaveAsPrefabAsset(portal, fullPath, out success);
+        if (success)
+            Debug.Log("Created prefab: " + fullPath);
+        else
+            Debug.LogError("Failed to create prefab: " + fullPath);
+
+        Object.DestroyImmediate(portal);
+    }
+
     [MenuItem("Tools/Delivery Rush/Create Car Data Assets")]
     public static void CreateCarDataAssets()
     {
@@ -177,6 +214,7 @@ public class DeliveryRushSetup : EditorWindow
     {
         BuildCarPrefabs();
         BuildSpeedBoostPrefab();
+        BuildPortalPrefab();
         CreateCarDataAssets();
         SetupSelectCarScene();
         SetupGameScene();
@@ -347,6 +385,7 @@ public class DeliveryRushSetup : EditorWindow
         CreateRoads(sceneRoot);
         CreateObstacles(sceneRoot);
         CreateSpeedBoosts(sceneRoot);
+        CreatePortals(sceneRoot);
         PickupPoint[] pickups = CreatePickupDeliveryPairs(sceneRoot);
         CreateSpawnPoint(sceneRoot);
         CreateHUDCanvas(sceneRoot);
@@ -569,6 +608,61 @@ public class DeliveryRushSetup : EditorWindow
         GameObject boost = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
         boost.transform.SetParent(parent.transform, false);
         boost.transform.localPosition = position;
+    }
+
+    private static void CreatePortals(GameObject root)
+    {
+        GameObject portalsParent = new GameObject("Portals");
+        portalsParent.transform.SetParent(root.transform);
+
+        Material portalAMat = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/Portals/PortalA.mat");
+        Material portalBMat = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/Portals/PortalB.mat");
+
+        GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Portals/Portal.prefab");
+        if (prefab == null)
+        {
+            Debug.LogError("Portal prefab not found. Run 'Setup Portal Prefab' first.");
+            return;
+        }
+
+        CreatePortalPair(portalsParent, prefab, portalAMat, portalBMat,
+            new Vector3(8f, 1.1f, -12f), new Vector3(-8f, 1.1f, 14f));
+        CreatePortalPair(portalsParent, prefab, portalAMat, portalBMat,
+            new Vector3(0f, 1.1f, 24f), new Vector3(-14f, 1.1f, -18f));
+    }
+
+    private static void CreatePortalPair(GameObject parent, GameObject prefab, Material matA, Material matB, Vector3 anchorA, Vector3 anchorB)
+    {
+        Portal portalA = CreatePortalInstance(parent, prefab, matA, RandomizePosition(anchorA));
+        Portal portalB = CreatePortalInstance(parent, prefab, matB, RandomizePosition(anchorB));
+
+        SerializedObject soA = new SerializedObject(portalA);
+        soA.FindProperty("linkedPortal").objectReferenceValue = portalB;
+        soA.ApplyModifiedProperties();
+
+        SerializedObject soB = new SerializedObject(portalB);
+        soB.FindProperty("linkedPortal").objectReferenceValue = portalA;
+        soB.ApplyModifiedProperties();
+    }
+
+    private static Portal CreatePortalInstance(GameObject parent, GameObject prefab, Material material, Vector3 position)
+    {
+        GameObject portal = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+        portal.transform.SetParent(parent.transform, false);
+        portal.transform.position = position;
+
+        MeshRenderer discRenderer = portal.GetComponentInChildren<MeshRenderer>();
+        if (discRenderer != null)
+            discRenderer.sharedMaterial = material;
+
+        return portal.GetComponent<Portal>();
+    }
+
+    private static Vector3 RandomizePosition(Vector3 anchor)
+    {
+        float x = Mathf.Clamp(anchor.x + Random.Range(-3f, 3f), -35f, 35f);
+        float z = Mathf.Clamp(anchor.z + Random.Range(-3f, 3f), -35f, 35f);
+        return new Vector3(x, anchor.y, z);
     }
 
     private static void WirePickupsToDeliveryManager(GameObject root, PickupPoint[] pickups)
