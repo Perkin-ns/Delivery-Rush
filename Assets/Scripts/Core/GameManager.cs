@@ -5,9 +5,9 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private string gameOverScene = "GameOver";
 
-    private void Start()
+    private void Awake()
     {
-        DeliveryManager.Instance.OnGameOver += OnGameOver;
+        DeliveryManager.OnGameOver += OnGameOver;
     }
 
     private void OnGameOver()
@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (DeliveryManager.Instance != null)
-            DeliveryManager.Instance.OnGameOver -= OnGameOver;
+        DeliveryManager.OnGameOver -= OnGameOver;
     }
 }

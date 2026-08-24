@@ -24,15 +24,7 @@ public class Minimap : MonoBehaviour
         minimapCamera.clearFlags = CameraClearFlags.SolidColor;
         minimapCamera.backgroundColor = new Color(0.15f, 0.25f, 0.1f, 1f);
 
-        Canvas canvas = GetComponent<Canvas>();
-        if (canvas == null)
-            canvas = gameObject.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-
-        if (GetComponent<CanvasScaler>() == null)
-            gameObject.AddComponent<CanvasScaler>();
-        if (GetComponent<GraphicRaycaster>() == null)
-            gameObject.AddComponent<GraphicRaycaster>();
+        UIFactory.EnsureCanvas(gameObject);
 
         GameObject rawImageGO = new GameObject("MinimapImage");
         rawImageGO.transform.SetParent(transform, false);

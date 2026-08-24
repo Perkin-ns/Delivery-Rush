@@ -11,6 +11,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float driftFactor = 0.95f;
     [SerializeField] private float acceleration = 2f;
     [SerializeField] private float maxSpeed = 30f;
+    [SerializeField] private float maxAcceleration = 15f;
+    [SerializeField] private float reverseMaxSpeed = 12f;
+    [SerializeField] private float steeringFalloff = 0.6f;
 
     [Header("Brake Settings")]
     [SerializeField] private float brakeForce = 15f;
@@ -92,24 +95,24 @@ public class PlayerMovement : MonoBehaviour
     {
         float forwardSpeed = Vector3.Dot(rb.linearVelocity, transform.forward);
 
-        if (isBraking)
+        if (isBraking && forwardSpeed > 0.1f)
         {
-            if (forwardSpeed > 0.1f)
-            {
-                rb.AddForce(-transform.forward * brakeForce, ForceMode.Acceleration);
-            }
+            rb.AddForce(-transform.forward * brakeForce, ForceMode.Acceleration);
         }
-
-        float targetSpeed = moveInput * maxSpeed;
-        float speedDiff = targetSpeed - forwardSpeed;
-        float accelRate = Mathf.Abs(targetSpeed) > 0.1f ? acceleration : acceleration * 2f;
-        float moveForce = speedDiff * accelRate;
-
-        rb.AddForce(transform.forward * moveForce, ForceMode.Acceleration);
 
         if (moveInput != 0f)
         {
-            rb.AddTorque(transform.up * turnInput * turnSpeed * Mathf.Sign(moveInput), ForceMode.Acceleration);
+            float targetSpeed = moveInput > 0f ? maxSpeed : -reverseMaxSpeed;
+            float speedDiff = targetSpeed - forwardSpeed;
+            float moveForce = Mathf.Clamp(speedDiff * acceleration, -maxAcceleration, maxAcceleration);
+            rb.AddForce(transform.forward * moveForce, ForceMode.Acceleration);
+        }
+
+        if (moveInput != 0f)
+        {
+            float speedRatio = Mathf.Clamp01(Mathf.Abs(forwardSpeed) / maxSpeed);
+            float steerScale = 1f - speedRatio * steeringFalloff;
+            rb.AddTorque(transform.up * turnInput * turnSpeed * steerScale * Mathf.Sign(moveInput), ForceMode.Acceleration);
         }
 
         Vector3 horizontalVelocity = rb.linearVelocity;

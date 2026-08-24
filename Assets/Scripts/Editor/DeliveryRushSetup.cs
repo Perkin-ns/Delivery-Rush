@@ -58,7 +58,7 @@ public class DeliveryRushSetup : EditorWindow
 
         Rigidbody rb = root.AddComponent<Rigidbody>();
         rb.mass = 1000f;
-        rb.linearDamping = 0.5f;
+        rb.linearDamping = 0.1f;
         rb.angularDamping = 2f;
         rb.useGravity = true;
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;

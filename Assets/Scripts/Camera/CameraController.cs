@@ -58,9 +58,4 @@ public class CameraController : MonoBehaviour
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocityRef, positionSmoothTime);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSmoothTime);
     }
-
-    public void SetTarget(Transform newTarget)
-    {
-        target = newTarget;
-    }
 }

@@ -13,42 +13,15 @@ public class ScoreUI : MonoBehaviour
         if (DeliveryManager.Instance == null)
             gameObject.AddComponent<DeliveryManager>();
 
-        TMP_FontAsset font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+        UIFactory.EnsureCanvas(gameObject);
+        TMP_FontAsset font = UIFactory.LoadFont();
 
-        Canvas canvas = GetComponent<Canvas>();
-        if (canvas == null)
-            canvas = gameObject.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-
-        if (GetComponent<UnityEngine.UI.CanvasScaler>() == null)
-            gameObject.AddComponent<UnityEngine.UI.CanvasScaler>();
-        if (GetComponent<UnityEngine.UI.GraphicRaycaster>() == null)
-            gameObject.AddComponent<UnityEngine.UI.GraphicRaycaster>();
-
-        scoreText = CreateText("ScoreText", new Vector2(-400f, -20f), 28, font);
-        timerText = CreateText("TimerText", new Vector2(400f, -20f), 28, font);
-        instructionText = CreateText("InstructionText", new Vector2(0f, 60f), 24, font);
-        boostText = CreateText("BoostText", new Vector2(0f, 0f), 22, font);
+        scoreText = UIFactory.CreateText(transform, "ScoreText", new Vector2(-400f, -20f), new Vector2(300f, 50f), 28, font);
+        timerText = UIFactory.CreateText(transform, "TimerText", new Vector2(400f, -20f), new Vector2(300f, 50f), 28, font);
+        instructionText = UIFactory.CreateText(transform, "InstructionText", new Vector2(0f, 60f), new Vector2(300f, 50f), 24, font);
+        boostText = UIFactory.CreateText(transform, "BoostText", new Vector2(0f, 0f), new Vector2(300f, 50f), 22, font);
         boostText.color = Color.yellow;
         boostText.gameObject.SetActive(false);
-    }
-
-    private TMP_Text CreateText(string name, Vector2 position, int fontSize, TMP_FontAsset font)
-    {
-        GameObject go = new GameObject(name);
-        go.transform.SetParent(transform, false);
-
-        RectTransform rect = go.AddComponent<RectTransform>();
-        rect.anchoredPosition = position;
-        rect.sizeDelta = new Vector2(300f, 50f);
-
-        TMP_Text tmp = go.AddComponent<TextMeshProUGUI>();
-        tmp.font = font;
-        tmp.fontSize = fontSize;
-        tmp.color = Color.white;
-        tmp.alignment = TextAlignmentOptions.Center;
-
-        return tmp;
     }
 
     private void Update()

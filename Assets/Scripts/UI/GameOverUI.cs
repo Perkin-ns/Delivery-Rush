@@ -6,51 +6,24 @@ public class GameOverUI : MonoBehaviour
 {
     private void Awake()
     {
-        TMP_FontAsset font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
-
-        Canvas canvas = GetComponent<Canvas>();
-        if (canvas == null)
-            canvas = gameObject.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-
-        if (GetComponent<UnityEngine.UI.CanvasScaler>() == null)
-            gameObject.AddComponent<UnityEngine.UI.CanvasScaler>();
-        if (GetComponent<UnityEngine.UI.GraphicRaycaster>() == null)
-            gameObject.AddComponent<UnityEngine.UI.GraphicRaycaster>();
+        UIFactory.EnsureCanvas(gameObject);
+        TMP_FontAsset font = UIFactory.LoadFont();
 
         GameObject eventSystemGO = new GameObject("EventSystem");
         eventSystemGO.transform.SetParent(transform, false);
         eventSystemGO.AddComponent<UnityEngine.EventSystems.EventSystem>();
         eventSystemGO.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
 
-        CreateText("TitleText", new Vector2(0f, 140f), 48, font).text = "GAME OVER";
+        UIFactory.CreateText(transform, "TitleText", new Vector2(0f, 140f), new Vector2(500f, 60f), 48, font).text = "GAME OVER";
 
         int score = PlayerPrefs.GetInt("FinalScore", 0);
         int deliveries = PlayerPrefs.GetInt("DeliveriesCompleted", 0);
 
-        CreateText("ScoreText", new Vector2(0f, 40f), 32, font).text = $"Score: {score}";
-        CreateText("DeliveriesText", new Vector2(0f, -20f), 28, font).text = $"Deliveries Completed: {deliveries}";
+        UIFactory.CreateText(transform, "ScoreText", new Vector2(0f, 40f), new Vector2(500f, 60f), 32, font).text = $"Score: {score}";
+        UIFactory.CreateText(transform, "DeliveriesText", new Vector2(0f, -20f), new Vector2(500f, 60f), 28, font).text = $"Deliveries Completed: {deliveries}";
 
         CreateButton("PlayAgainButton", "Play Again", new Vector2(0f, -120f), font, () => SceneManager.LoadScene("Game"));
         CreateButton("MainMenuButton", "Main Menu", new Vector2(0f, -200f), font, () => SceneManager.LoadScene("MainMenu"));
-    }
-
-    private TMP_Text CreateText(string name, Vector2 position, int fontSize, TMP_FontAsset font)
-    {
-        GameObject go = new GameObject(name);
-        go.transform.SetParent(transform, false);
-
-        RectTransform rect = go.AddComponent<RectTransform>();
-        rect.anchoredPosition = position;
-        rect.sizeDelta = new Vector2(500f, 60f);
-
-        TMP_Text tmp = go.AddComponent<TextMeshProUGUI>();
-        tmp.font = font;
-        tmp.fontSize = fontSize;
-        tmp.color = Color.white;
-        tmp.alignment = TextAlignmentOptions.Center;
-
-        return tmp;
     }
 
     private void CreateButton(string name, string label, Vector2 position, TMP_FontAsset font, System.Action onClick)
