@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Portal : MonoBehaviour
@@ -6,17 +7,12 @@ public class Portal : MonoBehaviour
     [SerializeField] private float cooldown = 1.5f;
     [SerializeField] private float exitOffset = 3f;
 
-    private float cooldownTimer;
-
-    private void Update()
-    {
-        if (cooldownTimer > 0f)
-            cooldownTimer -= Time.deltaTime;
-    }
+    private bool isOnCooldown;
+    private Coroutine cooldownCoroutine;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (cooldownTimer > 0f) return;
+        if (isOnCooldown) return;
         if (linkedPortal == null) return;
         if (!other.TryGetComponent<PlayerMovement>(out _)) return;
 
@@ -34,7 +30,22 @@ public class Portal : MonoBehaviour
 
         rb.position = exitPosition;
 
-        cooldownTimer = cooldown;
-        linkedPortal.cooldownTimer = cooldown;
+        EnterCooldown();
+        linkedPortal.EnterCooldown();
+    }
+
+    private void EnterCooldown()
+    {
+        if (cooldownCoroutine != null)
+            StopCoroutine(cooldownCoroutine);
+        isOnCooldown = true;
+        cooldownCoroutine = StartCoroutine(CooldownRoutine());
+    }
+
+    private IEnumerator CooldownRoutine()
+    {
+        yield return new WaitForSeconds(cooldown);
+        isOnCooldown = false;
+        cooldownCoroutine = null;
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class SpeedBoost : MonoBehaviour
@@ -8,8 +9,7 @@ public class SpeedBoost : MonoBehaviour
 
     private MeshRenderer meshRenderer;
     private Collider triggerCollider;
-    private float respawnTimer;
-    private bool isCollected;
+    private Coroutine respawnCoroutine;
 
     private void Awake()
     {
@@ -17,31 +17,26 @@ public class SpeedBoost : MonoBehaviour
         triggerCollider = GetComponent<Collider>();
     }
 
-    private void Update()
-    {
-        if (!isCollected) return;
-
-        respawnTimer -= Time.deltaTime;
-        if (respawnTimer <= 0f)
-        {
-            isCollected = false;
-            if (meshRenderer != null) meshRenderer.enabled = true;
-            if (triggerCollider != null) triggerCollider.enabled = true;
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
-        if (isCollected) return;
+        if (!other.TryGetComponent<PlayerMovement>(out var player)) return;
 
-        if (other.TryGetComponent<PlayerMovement>(out var player))
-        {
-            player.ActivateBoost(boostMultiplier, boostDuration);
+        player.ActivateBoost(boostMultiplier, boostDuration);
 
-            isCollected = true;
-            respawnTimer = respawnDelay;
-            if (meshRenderer != null) meshRenderer.enabled = false;
-            if (triggerCollider != null) triggerCollider.enabled = false;
-        }
+        if (meshRenderer != null) meshRenderer.enabled = false;
+        if (triggerCollider != null) triggerCollider.enabled = false;
+
+        if (respawnCoroutine != null)
+            StopCoroutine(respawnCoroutine);
+        respawnCoroutine = StartCoroutine(Respawn());
+    }
+
+    private IEnumerator Respawn()
+    {
+        yield return new WaitForSeconds(respawnDelay);
+
+        if (meshRenderer != null) meshRenderer.enabled = true;
+        if (triggerCollider != null) triggerCollider.enabled = true;
+        respawnCoroutine = null;
     }
 }

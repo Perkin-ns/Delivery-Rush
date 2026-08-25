@@ -463,7 +463,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   turnSpeed: 30
   driftFactor: 0.95
-  acceleration: 2
+  acceleration: 10
   maxSpeed: 30
   maxAcceleration: 15
   reverseMaxSpeed: 12

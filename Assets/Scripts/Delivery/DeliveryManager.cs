@@ -10,7 +10,7 @@ public class DeliveryManager : MonoBehaviour
     [SerializeField] private float maxDeliveryTime = 30f;
 
     [Header("Timer")]
-    [SerializeField] private float gameDuration = 120f;
+    [SerializeField] private float gameDuration = 30f;
 
     public int Score { get; private set; }
     public int DeliveriesCompleted { get; private set; }
@@ -27,6 +27,7 @@ public class DeliveryManager : MonoBehaviour
     private DeliveryPoint currentTarget;
 
     public static event System.Action OnGameOver;
+    public static event System.Action OnDeliveryCompleted;
 
     private void Awake()
     {
@@ -106,6 +107,8 @@ public class DeliveryManager : MonoBehaviour
         DeliveriesCompleted++;
         HasActiveDelivery = false;
         currentTarget = null;
+
+        OnDeliveryCompleted?.Invoke();
 
         if (pickupPoints != null && pickupPoints.Length > 0)
         {
