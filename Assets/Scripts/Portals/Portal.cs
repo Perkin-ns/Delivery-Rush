@@ -14,7 +14,7 @@ public class Portal : MonoBehaviour
     {
         if (isOnCooldown) return;
         if (linkedPortal == null) return;
-        if (!other.TryGetComponent<PlayerMovement>(out _)) return;
+        if (!other.TryGetComponent<IPlayerService>(out _)) return;
 
         Rigidbody rb = other.attachedRigidbody;
         if (rb == null) return;

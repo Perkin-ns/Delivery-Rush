@@ -2,14 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public static class UIFactory
+public class UIFactoryService : IUIFactory
 {
-    public static TMP_FontAsset LoadFont()
+    public TMP_FontAsset LoadFont()
     {
         return Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
     }
 
-    public static Canvas EnsureCanvas(GameObject go)
+    public Canvas EnsureCanvas(GameObject go)
     {
         Canvas canvas = go.GetComponent<Canvas>();
         if (canvas == null)
@@ -24,7 +24,7 @@ public static class UIFactory
         return canvas;
     }
 
-    public static TMP_Text CreateText(Transform parent, string name, Vector2 anchoredPosition, Vector2 sizeDelta, int fontSize, TMP_FontAsset font)
+    public TMP_Text CreateText(Transform parent, string name, Vector2 anchoredPosition, Vector2 sizeDelta, int fontSize, TMP_FontAsset font)
     {
         GameObject go = new GameObject(name);
         go.transform.SetParent(parent, false);

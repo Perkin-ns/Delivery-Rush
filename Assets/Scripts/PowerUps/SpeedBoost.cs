@@ -19,7 +19,7 @@ public class SpeedBoost : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.TryGetComponent<PlayerMovement>(out var player)) return;
+        if (!other.TryGetComponent<IPlayerService>(out var player)) return;
 
         player.ActivateBoost(boostMultiplier, boostDuration);
 

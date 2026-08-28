@@ -2,10 +2,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour, IPlayerService
 {
-    public static PlayerMovement Instance { get; private set; }
-
     [Header("Movement Settings")]
     [SerializeField] private float turnSpeed = 30f;
     [SerializeField] private float driftFactor = 0.95f;
@@ -30,17 +28,13 @@ public class PlayerMovement : MonoBehaviour
 
     public bool IsBoosted => isBoosted;
     public float BoostTimeRemaining => isBoosted ? boostTimer : 0f;
+    public Transform Transform => transform;
 
     private void Awake()
     {
-        Instance = this;
+        ServiceLocator.Register<IPlayerService>(this);
         rb = GetComponent<Rigidbody>();
         originalMaxSpeed = maxSpeed;
-    }
-
-    private void OnDestroy()
-    {
-        if (Instance == this) Instance = null;
     }
 
     private void Update()

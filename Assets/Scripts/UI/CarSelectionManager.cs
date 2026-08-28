@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using TMPro;
 
 public class CarSelectionManager : MonoBehaviour
@@ -16,7 +15,7 @@ public class CarSelectionManager : MonoBehaviour
     {
         if (cars.Length == 0) return;
 
-        currentIndex = PlayerPrefs.GetInt("SelectedCar", 0);
+        currentIndex = ServiceLocator.Get<IPersistenceService>().GetInt("SelectedCar", 0);
         currentIndex = Mathf.Clamp(currentIndex, 0, cars.Length - 1);
         ShowCar(currentIndex);
     }
@@ -44,9 +43,10 @@ public class CarSelectionManager : MonoBehaviour
 
     public void OnConfirm()
     {
-        PlayerPrefs.SetInt("SelectedCar", currentIndex);
-        PlayerPrefs.Save();
-        SceneManager.LoadScene(gameSceneName);
+        IPersistenceService save = ServiceLocator.Get<IPersistenceService>();
+        save.SetInt("SelectedCar", currentIndex);
+        save.Save();
+        ServiceLocator.Get<ISceneService>().Load(gameSceneName);
     }
 
     private void ShowCar(int index)

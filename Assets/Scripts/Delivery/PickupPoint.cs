@@ -28,11 +28,11 @@ public class PickupPoint : TriggerMarker
     private void OnTriggerEnter(Collider other)
     {
         if (!IsActive) return;
-        if (DeliveryManager.Instance == null) return;
-        if (DeliveryManager.Instance.HasActiveDelivery) return;
-        if (!other.TryGetComponent<PlayerMovement>(out _)) return;
+        if (!ServiceLocator.TryGet<IDeliveryService>(out var delivery)) return;
+        if (delivery.HasActiveDelivery) return;
+        if (!other.TryGetComponent<IPlayerService>(out _)) return;
 
-        DeliveryManager.Instance.StartDelivery(pairedDeliveryPoint, pickupName);
+        delivery.StartDelivery(pairedDeliveryPoint, pickupName);
         SetVisualActive(false);
         if (pairedDeliveryPoint != null)
             pairedDeliveryPoint.SetVisualActive(true);

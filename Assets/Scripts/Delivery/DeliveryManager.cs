@@ -1,9 +1,8 @@
 using UnityEngine;
 
-public class DeliveryManager : MonoBehaviour
+[DefaultExecutionOrder(-100)]
+public class DeliveryManager : MonoBehaviour, IDeliveryService
 {
-    public static DeliveryManager Instance { get; private set; }
-
     [Header("Scoring")]
     [SerializeField] private int baseScore = 50;
     [SerializeField] private int maxBonus = 50;
@@ -31,12 +30,7 @@ public class DeliveryManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
+        ServiceLocator.Register<IDeliveryService>(this);
         TimeRemaining = gameDuration;
     }
 

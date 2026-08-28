@@ -6,7 +6,7 @@ public class CarSpawner : MonoBehaviour
 
     private void Start()
     {
-        int selectedIndex = PlayerPrefs.GetInt("SelectedCar", 0);
+        int selectedIndex = ServiceLocator.Get<IPersistenceService>().GetInt("SelectedCar", 0);
         selectedIndex = Mathf.Clamp(selectedIndex, 0, cars.Length - 1);
 
         CarData data = cars[selectedIndex];

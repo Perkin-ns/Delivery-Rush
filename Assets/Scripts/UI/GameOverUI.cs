@@ -1,29 +1,30 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using TMPro;
 
 public class GameOverUI : MonoBehaviour
 {
     private void Awake()
     {
-        UIFactory.EnsureCanvas(gameObject);
-        TMP_FontAsset font = UIFactory.LoadFont();
+        IUIFactory ui = ServiceLocator.Get<IUIFactory>();
+        ui.EnsureCanvas(gameObject);
+        TMP_FontAsset font = ui.LoadFont();
 
         GameObject eventSystemGO = new GameObject("EventSystem");
         eventSystemGO.transform.SetParent(transform, false);
         eventSystemGO.AddComponent<UnityEngine.EventSystems.EventSystem>();
         eventSystemGO.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
 
-        UIFactory.CreateText(transform, "TitleText", new Vector2(0f, 140f), new Vector2(500f, 60f), 48, font).text = "GAME OVER";
+        ui.CreateText(transform, "TitleText", new Vector2(0f, 140f), new Vector2(500f, 60f), 48, font).text = "GAME OVER";
 
-        int score = PlayerPrefs.GetInt("FinalScore", 0);
-        int deliveries = PlayerPrefs.GetInt("DeliveriesCompleted", 0);
+        IPersistenceService save = ServiceLocator.Get<IPersistenceService>();
+        int score = save.GetInt("FinalScore", 0);
+        int deliveries = save.GetInt("DeliveriesCompleted", 0);
 
-        UIFactory.CreateText(transform, "ScoreText", new Vector2(0f, 40f), new Vector2(500f, 60f), 32, font).text = $"Score: {score}";
-        UIFactory.CreateText(transform, "DeliveriesText", new Vector2(0f, -20f), new Vector2(500f, 60f), 28, font).text = $"Deliveries Completed: {deliveries}";
+        ui.CreateText(transform, "ScoreText", new Vector2(0f, 40f), new Vector2(500f, 60f), 32, font).text = $"Score: {score}";
+        ui.CreateText(transform, "DeliveriesText", new Vector2(0f, -20f), new Vector2(500f, 60f), 28, font).text = $"Deliveries Completed: {deliveries}";
 
-        CreateButton("PlayAgainButton", "Play Again", new Vector2(0f, -120f), font, () => SceneManager.LoadScene("Game"));
-        CreateButton("MainMenuButton", "Main Menu", new Vector2(0f, -200f), font, () => SceneManager.LoadScene("MainMenu"));
+        CreateButton("PlayAgainButton", "Play Again", new Vector2(0f, -120f), font, () => ServiceLocator.Get<ISceneService>().Load("Game"));
+        CreateButton("MainMenuButton", "Main Menu", new Vector2(0f, -200f), font, () => ServiceLocator.Get<ISceneService>().Load("MainMenu"));
     }
 
     private void CreateButton(string name, string label, Vector2 position, TMP_FontAsset font, System.Action onClick)

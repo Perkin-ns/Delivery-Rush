@@ -47,8 +47,7 @@ public class WaypointArrow : MonoBehaviour
 
     private void Update()
     {
-        DeliveryManager dm = DeliveryManager.Instance;
-        if (dm == null || dm.IsGameOver)
+        if (!ServiceLocator.TryGet<IDeliveryService>(out var dm) || dm.IsGameOver)
         {
             arrowRoot.SetActive(false);
             return;

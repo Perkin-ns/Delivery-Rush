@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,11 +11,14 @@ public class GameManager : MonoBehaviour
 
     private void OnGameOver()
     {
-        PlayerPrefs.SetInt("FinalScore", DeliveryManager.Instance.Score);
-        PlayerPrefs.SetInt("DeliveriesCompleted", DeliveryManager.Instance.DeliveriesCompleted);
-        PlayerPrefs.Save();
+        IDeliveryService delivery = ServiceLocator.Get<IDeliveryService>();
+        IPersistenceService save = ServiceLocator.Get<IPersistenceService>();
+
+        save.SetInt("FinalScore", delivery.Score);
+        save.SetInt("DeliveriesCompleted", delivery.DeliveriesCompleted);
+        save.Save();
         Time.timeScale = 1f;
-        SceneManager.LoadScene(gameOverScene);
+        ServiceLocator.Get<ISceneService>().Load(gameOverScene);
     }
 
     private void OnDestroy()

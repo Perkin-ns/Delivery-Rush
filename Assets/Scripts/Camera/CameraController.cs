@@ -25,8 +25,8 @@ public class CameraController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (target == null && PlayerMovement.Instance != null)
-            target = PlayerMovement.Instance.transform;
+        if (target == null && ServiceLocator.TryGet<IPlayerService>(out var player))
+            target = player.Transform;
         if (target == null) return;
         FollowTarget();
     }

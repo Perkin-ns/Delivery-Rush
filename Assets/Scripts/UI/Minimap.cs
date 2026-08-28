@@ -24,7 +24,7 @@ public class Minimap : MonoBehaviour
         minimapCamera.clearFlags = CameraClearFlags.SolidColor;
         minimapCamera.backgroundColor = new Color(0.15f, 0.25f, 0.1f, 1f);
 
-        UIFactory.EnsureCanvas(gameObject);
+        ServiceLocator.Get<IUIFactory>().EnsureCanvas(gameObject);
 
         GameObject rawImageGO = new GameObject("MinimapImage");
         rawImageGO.transform.SetParent(transform, false);
@@ -43,9 +43,9 @@ public class Minimap : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (PlayerMovement.Instance == null) return;
+        if (!ServiceLocator.TryGet<IPlayerService>(out var player)) return;
 
-        Transform car = PlayerMovement.Instance.transform;
+        Transform car = player.Transform;
         minimapCamera.transform.position = car.position + Vector3.up * cameraHeight;
         minimapCamera.transform.rotation = Quaternion.Euler(90f, car.eulerAngles.y, 0f);
     }

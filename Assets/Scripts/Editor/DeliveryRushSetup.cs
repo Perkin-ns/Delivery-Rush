@@ -219,6 +219,7 @@ public class DeliveryRushSetup : EditorWindow
         SetupSelectCarScene();
         SetupGameScene();
         SetupGameOverScene();
+        SetupBootstrapScene();
         AddScenesToBuildSettings();
         Debug.Log("Delivery Rush setup complete!");
     }
@@ -229,13 +230,30 @@ public class DeliveryRushSetup : EditorWindow
         EditorBuildSettingsScene[] currentScenes = EditorBuildSettings.scenes;
         var sceneList = new System.Collections.Generic.List<EditorBuildSettingsScene>(currentScenes);
 
+        AddSceneIfMissing(sceneList, "Assets/Scenes/Bootstrap.unity");
         AddSceneIfMissing(sceneList, "Assets/Scenes/MainMenu.unity");
         AddSceneIfMissing(sceneList, "Assets/Scenes/SelectCar.unity");
         AddSceneIfMissing(sceneList, "Assets/Scenes/Game.unity");
         AddSceneIfMissing(sceneList, "Assets/Scenes/GameOver.unity");
 
+        MoveToFront(sceneList, "Assets/Scenes/Bootstrap.unity");
+
         EditorBuildSettings.scenes = sceneList.ToArray();
         Debug.Log("Scenes added to Build Settings.");
+    }
+
+    private static void MoveToFront(System.Collections.Generic.List<EditorBuildSettingsScene> list, string path)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (list[i].path == path)
+            {
+                var scene = list[i];
+                list.RemoveAt(i);
+                list.Insert(0, scene);
+                return;
+            }
+        }
     }
 
     private static void AddSceneIfMissing(System.Collections.Generic.List<EditorBuildSettingsScene> list, string path)
@@ -581,6 +599,10 @@ public class DeliveryRushSetup : EditorWindow
 
     private static void CreateGameManager(GameObject root)
     {
+        GameObject dmGO = new GameObject("DeliveryManager");
+        dmGO.transform.SetParent(root.transform);
+        dmGO.AddComponent<DeliveryManager>();
+
         GameObject gmGO = new GameObject("GameManager");
         gmGO.transform.SetParent(root.transform);
         gmGO.AddComponent<GameManager>();
@@ -675,6 +697,41 @@ public class DeliveryRushSetup : EditorWindow
         for (int i = 0; i < pickups.Length; i++)
             so.FindProperty($"pickupPoints.Array.data[{i}]").objectReferenceValue = pickups[i];
         so.ApplyModifiedProperties();
+    }
+
+    [MenuItem("Tools/Delivery Rush/Setup Bootstrap Scene")]
+    public static void SetupBootstrapScene()
+    {
+        Scene scene = EditorSceneManager.OpenScene("Assets/Scenes/Bootstrap.unity", OpenSceneMode.Single);
+
+        GameObject[] roots = scene.GetRootGameObjects();
+        foreach (GameObject go in roots)
+        {
+            if (go.name == "Bootstrap") Object.DestroyImmediate(go);
+        }
+
+        GameObject bootstrapGO = new GameObject("Bootstrap");
+        bootstrapGO.AddComponent<Bootstrap>();
+
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
+        Debug.Log("Bootstrap scene setup complete.");
+    }
+
+    [MenuItem("Tools/Delivery Rush/Setup Service Locator Demo Scene")]
+    public static void SetupServiceLocatorDemoScene()
+    {
+        Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+
+        GameObject root = new GameObject("ServiceLocatorDemo");
+        root.AddComponent<ServiceLocatorDemo>();
+
+        string path = "Assets/Scenes/ServiceLocatorDemo.unity";
+        bool success = EditorSceneManager.SaveScene(scene, path);
+        if (success)
+            Debug.Log("ServiceLocatorDemo scene saved to " + path);
+        else
+            Debug.LogError("Failed to save ServiceLocatorDemo scene.");
     }
 
     [MenuItem("Tools/Delivery Rush/Setup GameOver Scene")]

@@ -13,10 +13,10 @@ public class DeliveryPoint : TriggerMarker
     private void OnTriggerEnter(Collider other)
     {
         if (!IsActive) return;
-        if (DeliveryManager.Instance == null) return;
-        if (!other.TryGetComponent<PlayerMovement>(out _)) return;
+        if (!ServiceLocator.TryGet<IDeliveryService>(out var delivery)) return;
+        if (!other.TryGetComponent<IPlayerService>(out _)) return;
 
-        if (DeliveryManager.Instance.TryCompleteDelivery(this))
+        if (delivery.TryCompleteDelivery(this))
         {
             SetVisualActive(false);
         }
