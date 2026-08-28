@@ -33,7 +33,15 @@ public interface IPersistenceService
 {
     int GetInt(string key, int defaultValue);
     void SetInt(string key, int value);
+    string GetString(string key, string defaultValue);
+    void SetString(string key, string value);
     void Save();
+}
+
+public interface ILeaderboardService
+{
+    void Add(string name, int score);
+    System.Collections.Generic.IReadOnlyList<LeaderboardEntry> GetTop(int count);
 }
 
 public interface IUIFactory
