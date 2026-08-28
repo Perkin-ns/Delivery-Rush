@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviour
 
         save.SetInt("FinalScore", delivery.Score);
         save.SetInt("DeliveriesCompleted", delivery.DeliveriesCompleted);
+
+        string name = save.GetString("PlayerName", "Player");
+        ServiceLocator.Get<ILeaderboardService>().Add(name, delivery.Score);
+
         save.Save();
         Time.timeScale = 1f;
         ServiceLocator.Get<ISceneService>().Load(gameOverScene);
